@@ -1,0 +1,9 @@
+{
+    "('marketcap', 'cap', 'capitalization')": "marketCap", 
+    "('symbol', 'ticker')": "symbol", 
+    "('shortname', 'name')": "shortName", 
+    "('currentprice', 'price')": "currentPrice", 
+    "('sector', )": "sector", 
+    "('sp500', 'spy', 'snp500', 's&p')": "SP500", 
+    "('default', 'd')": "default"
+}
