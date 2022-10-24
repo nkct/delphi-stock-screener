@@ -5,7 +5,7 @@ import json
 import logging as log
 import sqlite3 as db
 
-import utils
+from src import utils
 
 # drop the provided table in the provided databse
 def clear(conn: db.Connection, table: str):
