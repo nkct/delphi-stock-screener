@@ -1,5 +1,4 @@
 from email import utils
-from json import load
 import unittest
 
 import sys
@@ -68,9 +67,6 @@ class TestUtils(unittest.TestCase):
             self.assertIsInstance(key, tuple)
 
     def test_alias(self):
-        pass
-
-    def test_clear(self):
         pass
 
 

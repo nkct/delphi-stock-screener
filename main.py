@@ -1,3 +1,4 @@
+from ast import arg
 import yfinance as yf
 import pandas as pd
 import math
@@ -8,6 +9,7 @@ import sys
 import logging as log
 
 from src import utils
+from src import helpers
 from src.fetch import fetch
 from src.sort import sort
 from src.filter import filter as delphi_filter
@@ -22,165 +24,6 @@ def millify(n):
                         int(math.floor(0 if n == 0 else math.log10(abs(n))/3))))
 
     return '{:.0f}{}'.format(n / 10**(3 * millidx), millnames[millidx])
-
-property_table = {
-        (
-            'zip', 
-            'sector', 
-            'fullTimeEmployees', 
-            'longBusinessSummary', 
-            'city', 
-            'phone', 
-            'state', 
-            'country', 
-            'companyOfficers', 
-            'website', 
-            'maxAge', 
-            'address1', 
-            'industry', 
-            'ebitdaMargins', 
-            'profitMargins', 
-            'grossMargins', 
-            'operatingCashflow', 
-            'revenueGrowth', 
-            'operatingMargins', 
-            'ebitda', 
-            'targetLowPrice', 
-            'recommendationKey', 
-            'grossProfits', 
-            'freeCashflow', 
-            'targetMedianPrice', 
-            'currentPrice', 
-            'earningsGrowth', 
-            'currentRatio', 
-            'returnOnAssets', 
-            'numberOfAnalystOpinions', 
-            'targetMeanPrice', 
-            'debtToEquity', 
-            'returnOnEquity', 
-            'targetHighPrice', 
-            'totalCash', 
-            'totalDebt', 
-            'totalRevenue', 
-            'totalCashPerShare', 
-            'financialCurrency', 
-            'revenuePerShare', 
-            'quickRatio', 
-            'recommendationMean', 
-            'exchange', 
-            'shortName', 
-            'longName', 
-            'exchangeTimezoneName', 
-            'exchangeTimezoneShortName', 
-            'isEsgPopulated', 
-            'gmtOffSetMilliseconds', 
-            'quoteType', 
-            'symbol', 
-            'messageBoardId', 
-            'market', 
-            'annualHoldingsTurnover', 
-            'enterpriseToRevenue', 
-            'beta3Year', 
-            'enterpriseToEbitda', 
-            '52WeekChange', 
-            'morningStarRiskRating', 
-            'forwardEps', 
-            'revenueQuarterlyGrowth', 
-            'sharesOutstanding', 
-            'fundInceptionDate', 
-            'annualReportExpenseRatio', 
-            'totalAssets', 
-            'bookValue', 
-            'sharesShort', 
-            'sharesPercentSharesOut', 
-            'fundFamily', 
-            'lastFiscalYearEnd', 
-            'heldPercentInstitutions', 
-            'netIncomeToCommon', 
-            'trailingEps', 
-            'lastDividendValue', 
-            'SandP52WeekChange', 
-            'priceToBook', 
-            'heldPercentInsiders', 
-            'nextFiscalYearEnd', 
-            'yield', 
-            'mostRecentQuarter', 
-            'shortRatio', 
-            'sharesShortPreviousMonthDate', 
-            'floatShares', 
-            'beta', 
-            'enterpriseValue', 
-            'priceHint', 
-            'threeYearAverageReturn', 
-            'lastSplitDate', 
-            'lastSplitFactor', 
-            'legalType', 
-            'lastDividendDate', 
-            'morningStarOverallRating', 
-            'earningsQuarterlyGrowth', 
-            'priceToSalesTrailing12Months', 
-            'dateShortInterest', 
-            'pegRatio', 
-            'ytdReturn', 
-            'forwardPE', 
-            'lastCapGain', 
-            'shortPercentOfFloat', 
-            'sharesShortPriorMonth', 
-            'impliedSharesOutstanding', 
-            'category', 
-            'fiveYearAverageReturn', 
-            'previousClose', 
-            'regularMarketOpen', 
-            'twoHundredDayAverage', 
-            'trailingAnnualDividendYield', 
-            'payoutRatio', 
-            'volume24Hr', 
-            'regularMarketDayHigh', 
-            'navPrice', 
-            'averageDailyVolume10Day', 
-            'regularMarketPreviousClose', 
-            'fiftyDayAverage', 
-            'trailingAnnualDividendRate', 
-            'open', 
-            'toCurrency', 
-            'averageVolume10days', 
-            'expireDate', 
-            'algorithm', 
-            'dividendRate', 
-            'exDividendDate', 
-            'circulatingSupply', 
-            'startDate', 
-            'regularMarketDayLow', 
-            'currency', 
-            'trailingPE', 
-            'regularMarketVolume', 
-            'lastMarket', 
-            'maxSupply', 
-            'openInterest', 
-            'marketCap', 
-            'volumeAllCurrencies', 
-            'strikePrice', 
-            'averageVolume', 
-            'dayLow', 
-            'ask', 
-            'askSize', 
-            'volume', 
-            'fiftyTwoWeekHigh', 
-            'fromCurrency', 
-            'fiveYearAvgDividendYield', 
-            'fiftyTwoWeekLow', 
-            'bid', 
-            'tradeable', 
-            'dividendYield', 
-            'bidSize', 
-            'dayHigh', 
-            'coinMarketCapLink', 
-            'regularMarketPrice', 
-            'preMarketPrice', 
-            'logo_url', 
-            'trailingPegRatio'
-        ): "info",
-    }
 
 
 parser = argparse.ArgumentParser()
@@ -217,20 +60,15 @@ def run(indices, args):
     conn = db.connect("database.db")
 
     if args.clear:
-        utils.clear(conn, args.clear)
+        helpers.clear(conn, args.clear)
         sys.exit("Cleared, exiting")
 
     if args.properties:
-        print(json.dumps(property_table, indent = 4))
+        print(helpers.available_properties())
         sys.exit("Properties displayed, exiting")
 
     if args.indices:
-        if args.indices == "all":
-            print(json.dumps(indices, indent = 4))
-        else:
-            for key, value in indices.items():
-                if key in map(utils.alias, args.indices.split()):
-                    print(f"{key}: {value}")
+        print(helpers.indices(args.indices, indices))
         sys.exit("Indices displayed, exiting")
 
 
@@ -255,15 +93,11 @@ def run(indices, args):
         sort(symbols, args.sort, args.descending)
 
     if args.new_index:
-        indices[args.new_index[0]] = symbols
-        with open("indices.json", "w") as f:
-            json.dump(indices, f)
+        helpers.new_index(args.new_index, indices, symbols)
         sys.exit("New index created, exiting")
 
     if args.delete_index:
-        indices.pop(args.delete_index[0])
-        with open("indices.json", "w") as f:
-            json.dump(indices, f)
+        helpers.delete_index(args.delete_index, indices)
         sys.exit("Index deleted, exiting")
 
     properties = []
