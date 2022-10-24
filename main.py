@@ -1,7 +1,4 @@
-from ast import arg
-import yfinance as yf
 import pandas as pd
-import math
 import sqlite3 as db
 import argparse
 import json
@@ -13,18 +10,6 @@ from src import helpers
 from src.fetch import fetch
 from src.sort import sort
 from src.filter import filter as delphi_filter
-
-def millify(n):
-    if n is None:
-        return "n/a"
-    
-    millnames = ['',' Thousand',' Million',' Billion',' Trillion']
-    n = float(n)
-    millidx = max(0,min(len(millnames)-1,
-                        int(math.floor(0 if n == 0 else math.log10(abs(n))/3))))
-
-    return '{:.0f}{}'.format(n / 10**(3 * millidx), millnames[millidx])
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument("symbols")
