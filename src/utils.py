@@ -1,3 +1,6 @@
+# defined in this file are functions (and objects) that are:
+# not large or significant enough to have their own file, not printing output to the user
+
 import ast
 import operator
 import json
