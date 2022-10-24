@@ -10,6 +10,7 @@ import logging as log
 from src import utils
 from src.fetch import fetch
 from src.sort import sort
+from src.filter import filter as delphi_filter
 
 def millify(n):
     if n is None:
@@ -248,18 +249,7 @@ def run(indices, args):
     symbols = new_symbols
 
     if args.filter:
-        for symbol in symbols[:]:
-            for filter in args.filter:
-                filter = filter.split()
-
-                lval = float(fetch([symbol], [utils.alias(filter[0])])[utils.alias(filter[0])][0])
-                op = filter[1]
-                rval = int(filter[2])
-
-
-                if not utils.eval(lval, op, rval):
-                    if symbol in symbols:
-                        symbols.remove(symbol)
+        delphi_filter(symbols, args.filter)
 
     if args.sort:
         sort(symbols, args.sort, args.descending)
