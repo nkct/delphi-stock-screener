@@ -1,5 +1,5 @@
 # defined in this file are functions (and objects) that are:
-# not large or significant enough to have their own file, printing output to the user
+# not large or significant enough to have their own file, interacting with the user
 
 import json
 import logging as log
