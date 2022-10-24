@@ -1,4 +1,3 @@
-import pandas as pd
 import sqlite3 as db
 import argparse
 import json
@@ -40,8 +39,6 @@ log.basicConfig(level = logging_level)
 
 
 def run(indices, args):
-    out = pd.DataFrame()
-
     conn = db.connect("database.db")
 
     if args.clear:
