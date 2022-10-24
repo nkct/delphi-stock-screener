@@ -6,7 +6,6 @@ import operator
 import json
 import pandas as pd
 import logging as log
-import sqlite3 as db
 
 # converts to string and removes the trailing comma in case of a one element tuple
 def tuple_to_sql_tuple_string(tuple: tuple):
@@ -72,16 +71,6 @@ def alias(alias: str):
 
     
     return alias
-
-# drop the provided table in the provided databse
-def clear(conn: db.Connection, table: str):
-    cur = conn.cursor()
-
-    cur.execute(f"""
-                    DROP TABLE {table}
-                """)
-
-    log.info(f"Clearing table: {table}, Rows affected: {cur.rowcount}")
 
 def scrape_sp500():
     sp500 = pd.read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")[0].loc[:, "Symbol"].tolist()
