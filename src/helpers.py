@@ -192,9 +192,9 @@ def indices(chosen_indices, saved_indices):
 def new_index(new_index, saved_indices, symbols):
     saved_indices[new_index[0]] = symbols
     with open("indices.json", "w") as f:
-        json.dump(indices, f)
+        json.dump(saved_indices, f)
 
 def delete_index(delete_index, saved_indices):
     saved_indices.pop(delete_index[0])
     with open("indices.json", "w") as f:
-        json.dump(indices, f)
+        json.dump(saved_indices, f)
