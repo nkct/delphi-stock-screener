@@ -82,9 +82,8 @@ def run(indices, args):
         helpers.delete_index(args.delete_index, indices)
         sys.exit("Index deleted, exiting")
 
-    properties = []
-    for prop in args.property:
-        properties += [utils.alias(prop)]
+    properties = utils.alias_properties(args.properties)
+
     out = fetch(symbols, properties)
     
     if out.empty:

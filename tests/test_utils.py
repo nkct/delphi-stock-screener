@@ -69,6 +69,10 @@ class TestUtils(unittest.TestCase):
     def test_alias(self):
         pass
 
+    def test_alias_properties(self):
+        props = ["Price", "TICKER", "MarketCap"]
+        self.assertEqual(utils.alias_properties(props), ["currentPrice", "symbol", "marketCap"])
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -74,3 +74,6 @@ def alias(alias: str):
 
 def scrape_sp500():
     sp500 = pd.read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")[0].loc[:, "Symbol"].tolist()
+
+def alias_properties(properties):
+    return list(map(alias, properties))
