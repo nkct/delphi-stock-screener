@@ -75,12 +75,15 @@ def alias(alias: str):
 def scrape_sp500():
     sp500 = pd.read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")[0].loc[:, "Symbol"].tolist()
 
+# maps alias over properties
 def alias_properties(properties):
     return list(map(alias, properties))
 
+# maps alias over symbols
 def alias_symbols(symbols):
     return list(map(alias, symbols))
 
+# if the symbol is an index, changes it to all the symbols in that index
 def indices_to_keys(symbols, indices):
     out = []
     for symbol in symbols:
