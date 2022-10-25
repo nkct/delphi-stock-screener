@@ -55,18 +55,8 @@ def run(indices, args):
 
 
     symbols = args.symbols.split()
-
-    for symbol in symbols:
-        symbols[symbols.index(symbol)] = symbol.upper()
-
-    new_symbols = []
-    for symbol in symbols[:]:
-        symbol = utils.alias(symbol)
-        if symbol in indices.keys():
-            new_symbols += indices[symbol]
-        else:
-            new_symbols += [symbol]
-    symbols = new_symbols
+    symbols = utils.alias_symbols(symbols)
+    symbols = utils.indices_to_keys(symbols, indices)
 
     if args.filter:
         delphi_filter(symbols, args.filter)

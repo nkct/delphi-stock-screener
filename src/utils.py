@@ -77,3 +77,16 @@ def scrape_sp500():
 
 def alias_properties(properties):
     return list(map(alias, properties))
+
+def alias_symbols(symbols):
+    return list(map(alias, symbols))
+
+def indices_to_keys(symbols, indices):
+    out = []
+    for symbol in symbols:
+        if symbol in indices.keys():
+            out += indices[symbol]
+        else:
+            out += symbol
+    
+    return out
