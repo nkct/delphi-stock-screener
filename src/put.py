@@ -4,8 +4,10 @@ import sqlite3 as db
 from src import utils
 
 def put(df: pd.DataFrame):
-    conn = db.connect('database.db')
+    conn = db.connect(utils.get_database())
     cur = conn.cursor()
+
+    table = utils.get_table()
 
     #df = df.reset_index()
     df.dropna(axis = 1, inplace = True)
@@ -23,7 +25,7 @@ def put(df: pd.DataFrame):
             changes = str(changes)[1:-1].replace("\"", "")
 
             cur.execute(f"""
-                            UPDATE data
+                            UPDATE {table}
                             SET {changes}
                             WHERE symbol = '{df.loc[0, "symbol"]}'
                         """)
@@ -32,7 +34,7 @@ def put(df: pd.DataFrame):
 
             if cur.rowcount == 0:
                 cur.execute(f"""
-                                INSERT INTO data
+                                INSERT INTO {table}
                                 {sql_columns}
                                 VALUES
                                 {values};
@@ -40,7 +42,7 @@ def put(df: pd.DataFrame):
 
                 conn.commit()
 
-            print(f"Inserting into table: data, Rows affected: {cur.rowcount}")
+            print(f"Inserting into table: {table}, Rows affected: {cur.rowcount}")
 
             cur.close()
             conn.close()
@@ -51,18 +53,18 @@ def put(df: pd.DataFrame):
             if str(e).startswith("no such column:"):
                 column = str(e)[16:]
                 cur.execute(f"""
-                                ALTER TABLE data
+                                ALTER TABLE {table}
                                 ADD {column} TEXT
                             """)
                 continue
             # table not found
             elif str(e).startswith("no such table:"):
                 cur.execute(f"""
-                                CREATE TABLE data (
+                                CREATE TABLE {table} (
                                     symbol TEXT
                                 )
                             """)
                 continue
             else:
-                print(f"Error while inserting into data: {e}")
+                print(f"Error while inserting into {table}: {e}")
                 break

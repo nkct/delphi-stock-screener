@@ -9,8 +9,10 @@ from src.put import put
 def fetch(symbol, property):
     raw_property = property
 
-    conn = db.connect('database.db')
+    conn = db.connect(utils.get_database())
     cursor = conn.cursor()
+
+    table = utils.get_table()
 
     symbols = tuple(symbol)
     symbols = utils.tuple_to_sql_tuple_string(symbols)
@@ -26,14 +28,14 @@ def fetch(symbol, property):
             symbol_exists = cursor.execute(f"""
                                 SELECT EXISTS(
                                     SELECT 1 
-                                    FROM data 
+                                    FROM {table} 
                                     WHERE symbol='{s}')
                             """).fetchone()[0]
             if symbol_exists == 0:
                 raise db.OperationalError
 
         cursor.execute(f"""
-                            SELECT {property} FROM data
+                            SELECT {property} FROM {table}
                             WHERE symbol IN {symbols}
                         """)
 
@@ -43,7 +45,7 @@ def fetch(symbol, property):
             put(download(s, raw_property))
 
         cursor.execute(f"""
-                            SELECT {property} FROM data
+                            SELECT {property} FROM {table} 
                             WHERE symbol IN {symbols}
                         """)
 

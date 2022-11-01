@@ -95,3 +95,9 @@ def indices_to_keys(symbols, indices):
             out += symbol
     
     return out
+
+def get_database():
+    return "database.db"
+
+def get_table():
+    return "data"
