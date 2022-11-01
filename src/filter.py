@@ -19,3 +19,5 @@ def filter(symbols, filters):
                     # is this if even nessecary?
                     if symbol in symbols:
                         symbols.remove(symbol)
+
+    return symbols
