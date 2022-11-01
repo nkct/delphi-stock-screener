@@ -3,7 +3,7 @@ import sqlite3 as db
 
 from src import utils
 
-def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_table()):
+def put(df: pd.DataFrame, database = utils.DATABASE, table = utils.TABLE):
     conn = db.connect(database)
     cur = conn.cursor()
 

@@ -7,6 +7,9 @@ import json
 import pandas as pd
 import logging as log
 
+DATABASE = "database.db"
+TABLE = "data"
+
 # converts to string and removes the trailing comma in case of a one element tuple
 def tuple_to_sql_tuple_string(tuple: tuple):
     log.debug(f"tuple_to_sql_tuple_string({tuple})")
@@ -95,9 +98,3 @@ def indices_to_keys(symbols, indices):
             out += symbol
     
     return out
-
-def get_database():
-    return "database.db"
-
-def get_table():
-    return "data"

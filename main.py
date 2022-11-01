@@ -48,7 +48,7 @@ log.basicConfig(level = logging_level)
 
 
 def run(indices, args):
-    conn = db.connect(utils.get_database())
+    conn = db.connect(utils.DATABASE)
 
     if args.clear:
         helpers.clear(conn, args.clear)
