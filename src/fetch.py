@@ -6,13 +6,11 @@ from src import utils
 from src.download import download
 from src.put import put
 
-def fetch(symbol, property):
+def fetch(symbol, property, database = utils.get_database(), table = utils.get_table()):
     raw_property = property
 
-    conn = db.connect(utils.get_database())
+    conn = db.connect(database)
     cursor = conn.cursor()
-
-    table = utils.get_table()
 
     symbols = tuple(symbol)
     symbols = utils.tuple_to_sql_tuple_string(symbols)

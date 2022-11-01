@@ -3,11 +3,9 @@ import sqlite3 as db
 
 from src import utils
 
-def put(df: pd.DataFrame):
-    conn = db.connect(utils.get_database())
+def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_table()):
+    conn = db.connect(database)
     cur = conn.cursor()
-
-    table = utils.get_table()
 
     #df = df.reset_index()
     df.dropna(axis = 1, inplace = True)
