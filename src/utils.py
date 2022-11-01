@@ -62,6 +62,7 @@ def load_aliases():
 
 # checks if the provided word has any synonyms, if so, returns the base meaning, if not, returns input
 def alias(alias: str):
+    log.debug(f"alias(alias: {alias})")
     aliases = load_aliases()
 
     for key in aliases.keys():
@@ -77,6 +78,7 @@ def scrape_sp500():
 
 # maps alias over properties
 def alias_properties(properties):
+    log.debug(f"alias_properties(properties: {properties})")
     return list(map(alias, properties))
 
 # maps alias over symbols
