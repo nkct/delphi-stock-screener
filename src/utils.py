@@ -52,14 +52,15 @@ def eval(lval, op, rval):
 
 # load the aliases.json file to a dict
 def load_aliases():
+    f = open("aliases.json")
     aliases = {
         # as json does not allow for tuple keys they are stored as a string and then parsed
         ast.literal_eval(k): v 
         for k, v in json.loads (
-            open("aliases.json")
-            .read()
+            f.read()
         ).items()
     }
+    f.close()    
 
     return aliases
 
