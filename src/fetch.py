@@ -1,5 +1,7 @@
 import pandas as pd
 import sqlite3 as db
+import logging as log
+
 
 from src import utils
 
@@ -7,6 +9,8 @@ from src.download import download
 from src.put import put
 
 def fetch(symbol, property, database = utils.DATABASE, table = utils.TABLE):
+    log.debug(f"fetch({symbol}, {property}, {database}, {table})")
+
     raw_property = property
 
     conn = db.connect(database)
