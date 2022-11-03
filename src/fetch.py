@@ -8,7 +8,10 @@ from src import utils
 from src.download import download
 from src.put import put
 
-def fetch(symbol, property, database = utils.DATABASE, table = utils.TABLE):
+def fetch(symbol, property, database = utils.get_database(), table = utils.get_table()):
+    # reupdating, breaks without this, has to be a better way
+    database = utils.get_database()
+    table = utils.get_table()
     log.debug(f"fetch({symbol}, {property}, {database}, {table})")
 
     raw_property = property

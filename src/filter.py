@@ -5,7 +5,7 @@ from src.fetch import fetch
 
 def filter(symbols, filters):
     log.info(f"filter({symbols}, {filters})")
-    
+
     for symbol in symbols[:]:
             for filter in filters:
                 filter = filter.split()

@@ -1,7 +1,7 @@
 import unittest
-
 import sqlite3 as db
 import os
+import json
 
 import sys
 sys.path.append('/home/nkct/Documents/projects/python/delphi/src')
@@ -13,15 +13,29 @@ class TestSort(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # VERY BAD PRECTICE! STRICTLY FOR TESTING! CHANGE BACK AFTER USE!
-        utils.DATABASE = "test.db"
-        utils.TABLE = "test"
+        # STRICTLY FOR TESTING! CHANGE BACK AFTER USE!
+        f = open("settings.json")
+        settings = json.loads(f.read())
+        f.close()
 
-        conn = db.connect(utils.DATABASE)
+        cls.old_database = settings["database"]["path"]
+        cls.old_table = settings["database"]["table"]
+
+        settings["database"]["path"] = "test.db"
+        settings["database"]["table"] = "test"
+
+        with open("settings.json", "w") as f:
+            json.dump(settings, f)
+
+        database = utils.get_database()
+        table = utils.get_table()
+        
+
+        conn = db.connect(database)
         cur = conn.cursor()
 
         cur.execute(f"""
-                        CREATE TABLE {utils.TABLE} (
+                        CREATE TABLE {table} (
                             symbol TEXT,
                             int1 TEXT,
                             int2 TEXT,
@@ -30,7 +44,7 @@ class TestSort(unittest.TestCase):
                     """)
 
         cur.execute(f"""
-                        INSERT INTO {utils.TABLE}
+                        INSERT INTO {table}
                         VALUES
                         ('SYM', '100', '500', 'abcde'),
                         ('BOL', '10', '80', 'fghij'),
@@ -47,7 +61,15 @@ class TestSort(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        utils.DATABASE = "database.db"
+        f = open("settings.json")
+        settings = json.loads(f.read())
+        f.close()
+
+        settings["database"]["path"] = cls.old_database
+        settings["database"]["table"] = cls.old_table
+
+        with open("settings.json", "w") as f:
+            json.dump(settings, f)
 
         os.remove("test.db")
 
