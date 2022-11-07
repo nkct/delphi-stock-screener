@@ -10,9 +10,12 @@ def filter(symbols, filters):
             for filter in filters:
                 filter = filter.split()
 
-                lval = float(fetch([symbol], [utils.alias(filter[0])])[utils.alias(filter[0])][0])
+                lval = utils.alias(filter[0])
+                rval = utils.alias(filter[2])
+
+                lval = float(fetch([symbol], [lval])[lval][0])
                 op = filter[1]
-                rval = int(filter[2])
+                rval = float(filter[2] if filter[2].isnumeric() else fetch([symbol], [rval])[rval][0])
 
 
                 if not utils.eval(lval, op, rval):
