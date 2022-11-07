@@ -47,7 +47,7 @@ class TestSort(unittest.TestCase):
                         INSERT INTO {table}
                         VALUES
                         ('SYM', '100', '500', 'abcde'),
-                        ('BOL', '10', '80', 'fghij'),
+                        ('BOL', '10', '10', 'fghij'),
                         ('TIC', '200', '731', 'qwert'),
                         ('KER', '3000', '3', 'asdfg');
                     """)
@@ -57,6 +57,22 @@ class TestSort(unittest.TestCase):
         self.assertEqual(
             delphi_filter(["SYM", "BOL", "TIC", "KER"], ["int1 < 200"]),
             ["SYM", "BOL"]
+        )
+        self.assertEqual(
+            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["int1 == int2"]),
+            ["BOL"]
+        )
+        self.assertEqual(
+            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["str == qwert"]),
+            ["TIC"]
+        )
+        self.assertEqual(
+            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["str < b"]),
+            ["BOL", "TIC"]
+        )
+        self.assertEqual(
+            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["int1 < 200", "int2 > 50"]),
+            ["SYM"]
         )
 
     @classmethod
