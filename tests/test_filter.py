@@ -63,11 +63,11 @@ class TestSort(unittest.TestCase):
             ["BOL"]
         )
         self.assertEqual(
-            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["str == qwert"]),
+            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["str == \"qwert\""]),
             ["TIC"]
         )
         self.assertEqual(
-            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["str < b"]),
+            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["str > \"b\""]),
             ["BOL", "TIC"]
         )
         self.assertEqual(
