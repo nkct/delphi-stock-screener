@@ -6,6 +6,7 @@ from src.fetch import fetch
 def filter(symbols, filters):
     log.info(f"filter({symbols}, {filters})")
 
+    # taking a slice to avoid mutating during iteration
     for symbol in symbols[:]:
         for filter in filters:
             filter = filter.split()
@@ -16,9 +17,11 @@ def filter(symbols, filters):
             lval_fetch = fetch([symbol], [lval])[lval]
             rval_fetch = fetch([symbol], [rval])[rval]
 
+            # if fetch was succesful, extracts value
             lval = lval_fetch[0] if not lval_fetch.empty else lval
             rval = rval_fetch[0] if not rval_fetch.empty else rval
 
+            # type normalization
             lval = str(lval)
             rval = str(rval)
                 
@@ -28,7 +31,7 @@ def filter(symbols, filters):
             op = filter[1]
             
             if not utils.eval(lval, op, rval):
-                # if is nessecary beacouse multiple passes over symbols are made
+                # if is nessecary becaouse multiple passes over symbols are made
                 if symbol in symbols:
                     symbols.remove(symbol)
 
