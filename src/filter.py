@@ -31,7 +31,7 @@ def filter(symbols, filters):
             op = filter[1]
             
             if not utils.eval(lval, op, rval):
-                # if is nessecary becaouse multiple passes over symbols are made
+                # if is nessecary because multiple passes over symbols are made
                 if symbol in symbols:
                     symbols.remove(symbol)
 
