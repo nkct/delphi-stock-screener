@@ -9,7 +9,7 @@ import utils
 
 from src.filter import filter as delphi_filter
 
-class TestSort(unittest.TestCase):
+class TestFilter(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
