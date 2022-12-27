@@ -13,7 +13,10 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
     columns = utils.tuple_to_sql_tuple_string(tuple(df.columns.values.tolist()))
     sql_columns = columns.replace("'", "")
 
-    values = utils.tuple_to_sql_tuple_string(tuple(df.iloc[0].tolist()))
+    values = ""
+    for row in df.head(-1).iloc:
+        values += utils.tuple_to_sql_tuple_string(tuple(row.tolist())) + ","
+    values += utils.tuple_to_sql_tuple_string(tuple(df.iloc[-1].tolist()))
 
     while True:
         try:
