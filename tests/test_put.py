@@ -140,6 +140,29 @@ class TestPut(unittest.TestCase):
             ]
         )
 
+    def test_put_create_table(self):
+        self.cur.execute(f"DROP TABLE {self.table}")
+
+        df = pd.DataFrame({
+            "symbol": ["SYM", "BOL", "TIC", "KER"], 
+            "int1": [975, 3, 12, 9684], 
+            "int2": [62, 87, 432, 5687], 
+            "str": ["hgli", "gejh", "olcx", "mgjn"]
+        })
+        put(df, "test.db", "test")
+
+        self.cur.execute(f"SELECT * FROM {self.table}")
+
+        self.assertEqual(
+            self.cur.fetchall(),
+            [
+                ('SYM', '975', '62', 'hgli'), 
+                ('BOL', '3', '87', 'gejh'), 
+                ('TIC', '12', '432', 'olcx'), 
+                ('KER', '9684', '5687', 'mgjn')
+            ]
+        )
+
     def tearDown(self):
         self.cur.execute(f"DROP TABLE {self.table}")
 
