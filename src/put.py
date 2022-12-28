@@ -1,5 +1,6 @@
 import pandas as pd
 import sqlite3 as db
+import logging as log
 
 from src import utils
 
@@ -46,9 +47,9 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
 
                 conn.commit()
 
-                print(f"Inserting into table: {table}, Rows affected: {cur.rowcount}")
+                log.info(f"Inserted into table: {table}, Rows affected: {cur.rowcount}")
             else:
-                print(f"Updating values in table table: {table}, Rows affected: {cur.rowcount}")
+                log.info(f"Updated values in table table: {table}, Rows affected: {cur.rowcount}")
 
 
             cur.close()
@@ -63,6 +64,7 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
                                 ALTER TABLE {table}
                                 ADD {column} TEXT
                             """)
+                log.info(f"Altered table to add column: {column}")
                 continue
             # table not found
             elif str(e).startswith("no such table:"):
@@ -71,7 +73,8 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
                                     symbol TEXT
                                 )
                             """)
+                log.info(f"Created table {table}")
                 continue
             else:
-                print(f"Error while inserting into {table}: {e}")
+                log.error(f"Error while inserting into {table}: {e}")
                 break
