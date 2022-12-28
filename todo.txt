@@ -1,0 +1,13 @@
+rewrite tests to be more concise and in the following format:
+assert (
+    function(test data),
+    expected result
+)
+
+declare each assert as a subtest
+
+normalize db cursor naming (cursor or cur)
+
+enchance function definitions
+
+change function call logging to debug

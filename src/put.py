@@ -20,18 +20,20 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
 
     while True:
         try:
-            changes = []
-            for column in df.columns.values.tolist():
-                changes.append(f"{column} = '{df.loc[0, column]}'")
-            changes = str(changes)[1:-1].replace("\"", "")
+            for row in df.iloc:
+                changes = []
+                for value in row:
+                    changes.append(f"{row[row == value].index[0]} = '{value}'")
+                changes = str(changes)[1:-1].replace("\"", "")
 
-            cur.execute(f"""
-                            UPDATE {table}
-                            SET {changes}
-                            WHERE symbol = '{df.loc[0, "symbol"]}'
-                        """)
-            
-            conn.commit()
+                cur.execute(f"""
+                                UPDATE {table}
+                                SET {changes}
+                                WHERE symbol = '{row[0]}'
+                            """)
+                
+                conn.commit()
+
 
             if cur.rowcount == 0:
                 cur.execute(f"""
@@ -43,7 +45,10 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
 
                 conn.commit()
 
-            print(f"Inserting into table: {table}, Rows affected: {cur.rowcount}")
+                print(f"Inserting into table: {table}, Rows affected: {cur.rowcount}")
+            else:
+                print(f"Updating values in table table: {table}, Rows affected: {cur.rowcount}")
+
 
             cur.close()
             conn.close()
