@@ -10,14 +10,6 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
     #df = df.reset_index()
     df.dropna(axis = 1, inplace = True)
 
-    columns = utils.tuple_to_sql_tuple_string(tuple(df.columns.values.tolist()))
-    sql_columns = columns.replace("'", "")
-
-    values = ""
-    for row in df.head(-1).iloc:
-        values += utils.tuple_to_sql_tuple_string(tuple(row.tolist())) + ","
-    values += utils.tuple_to_sql_tuple_string(tuple(df.iloc[-1].tolist()))
-
     while True:
         try:
             for row in df.iloc:
@@ -36,6 +28,15 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
 
 
             if cur.rowcount == 0:
+
+                columns = utils.tuple_to_sql_tuple_string(tuple(df.columns.values.tolist()))
+                sql_columns = columns.replace("'", "")
+
+                values = ""
+                for row in df.head(-1).iloc:
+                    values += utils.tuple_to_sql_tuple_string(tuple(row.tolist())) + ","
+                values += utils.tuple_to_sql_tuple_string(tuple(df.iloc[-1].tolist()))
+
                 cur.execute(f"""
                                 INSERT INTO {table}
                                 {sql_columns}
