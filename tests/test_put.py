@@ -110,6 +110,36 @@ class TestPut(unittest.TestCase):
             ]
         )
 
+    def test_put_alter(self):
+        df = pd.DataFrame({
+            "symbol": ["SYM", "BOL", "TIC", "KER"], 
+            "int1": [975, 3, 12, 9684], 
+            "int2": [62, 87, 432, 5687], 
+            "str": ["hgli", "gejh", "olcx", "mgjn"]
+        })
+        put(df, "test.db", "test")
+
+        df = pd.DataFrame({
+            "symbol": ["SYM", "BOL", "TIC", "KER"], 
+            "int1": [9876, 45, 9, 53], 
+            "int2": [0, 38, 43879, 87], 
+            "str": ["gyujs", "kj", "rt", "k"],
+            "new_column": ["hjf", "jret", "iurt", "ihyk"]
+        })
+        put(df, "test.db", "test")
+
+        self.cur.execute(f"SELECT * FROM {self.table}")
+
+        self.assertEqual(
+            self.cur.fetchall(),
+            [
+                ('SYM', '9876', '0', 'gyujs', 'hjf'), 
+                ('BOL', '45', '38', 'kj', 'jret'), 
+                ('TIC', '9', '43879', 'rt', 'iurt'), 
+                ('KER', '53', '87', 'k', 'ihyk')
+            ]
+        )
+
     def tearDown(self):
         self.cur.execute(f"DROP TABLE {self.table}")
 
