@@ -163,6 +163,27 @@ class TestPut(unittest.TestCase):
             ]
         )
 
+    def test_put_incorrect_input(self):
+        df = pd.DataFrame({
+            "symbol": ["SYM", 17, "TIC", " "], 
+            "int1": [975, 3, "kgl", 9684], 
+            "int2": [62, 87, 432, None], 
+            "str": [None, "gejh", "olcx", "mgjn"]
+        })
+        put(df, "test.db", "test")
+
+        self.cur.execute(f"SELECT * FROM {self.table}")
+
+        self.assertEqual(
+            self.cur.fetchall(),
+            [
+                ('SYM', '975', '62', 'Null'), 
+                ('17', '3', '87', 'gejh'), 
+                ('TIC', 'kgl', '432', 'olcx'), 
+                (' ', '9684', 'Null', 'mgjn')
+            ]
+        )
+
     def tearDown(self):
         self.cur.execute(f"DROP TABLE {self.table}")
 
