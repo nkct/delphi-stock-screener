@@ -8,15 +8,17 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
     conn = db.connect(database)
     cur = conn.cursor()
 
-    #df = df.reset_index()
-    df.dropna(axis = 1, inplace = True)
+    df = df.fillna("Null")
 
     while True:
         try:
             for row in df.iloc:
                 changes = []
                 for value in row:
-                    changes.append(f"{row[row == value].index[0]} = '{value}'")
+                    # get trid of unnecessary floats
+                    if isinstance(value, float) and value.is_integer():
+                        value = int(value)
+                    changes.append(f"{row.index[list(row.values).index(value)]} = '{value}'")
                 changes = str(changes)[1:-1].replace("\"", "")
 
                 cur.execute(f"""
@@ -35,7 +37,11 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
 
                 values = ""
                 for row in df.head(-1).iloc:
-                    values += utils.tuple_to_sql_tuple_string(tuple(row.tolist())) + ","
+                    values += utils.tuple_to_sql_tuple_string(tuple(
+                        map(
+                            lambda value: int(value) if isinstance(value, float) and value.is_integer() else value, 
+                            row.tolist()))
+                        ) + ","
                 values += utils.tuple_to_sql_tuple_string(tuple(df.iloc[-1].tolist()))
 
                 cur.execute(f"""
