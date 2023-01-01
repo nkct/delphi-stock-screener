@@ -10,8 +10,6 @@ normalize db cursor naming (cursor or cur)
 
 enchance function definitions
 
-change function call logging to debug
-
 add sql query printout for debugging
 
 clean up imports (src. is not nessecarily needed)

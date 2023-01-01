@@ -5,6 +5,8 @@ import logging as log
 from src import utils
 
 def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_table()):
+    log.debug(f"put({df}, {database}, {table})")
+    
     conn = db.connect(database)
     cur = conn.cursor()
 

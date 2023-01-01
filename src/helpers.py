@@ -9,6 +9,8 @@ from src import utils
 
 # drop the provided table in the provided databse
 def clear(conn: db.Connection, table: str):
+    log.debug(f"clear({conn}, {table})")
+
     cur = conn.cursor()
 
     cur.execute(f"""
@@ -180,6 +182,8 @@ def available_properties():
     return json.dumps(property_table, indent = 4)
 
 def indices(chosen_indices, saved_indices):
+    log.debug(f"indices({chosen_indices}, {saved_indices})")
+
     if chosen_indices == "all":
             return json.dumps(saved_indices, indent = 4)
     else:
@@ -190,11 +194,15 @@ def indices(chosen_indices, saved_indices):
         return out
 
 def new_index(new_index, saved_indices, symbols):
+    log.debug(f"new_index({new_index}, {saved_indices}, {symbols})")
+
     saved_indices[new_index[0]] = symbols
     with open("indices.json", "w") as f:
         json.dump(saved_indices, f)
 
 def delete_index(delete_index, saved_indices):
+    log.debug(f"delete_index({delete_index}, {saved_indices})")
+    
     saved_indices.pop(delete_index[0])
     with open("indices.json", "w") as f:
         json.dump(saved_indices, f)

@@ -4,7 +4,7 @@ from src import utils
 from src.fetch import fetch
 
 def filter(symbols, filters):
-    log.info(f"filter({symbols}, {filters})")
+    log.debug(f"filter({symbols}, {filters})")
 
     # taking a slice to avoid mutating during iteration
     for symbol in symbols[:]:

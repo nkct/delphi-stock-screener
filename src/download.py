@@ -1,8 +1,10 @@
 import sys
 import pandas as pd
 import yfinance as yf
+import logging as log
 
 def download(symbol, properties):
+    log.debug(f"download({symbol}, {properties})")
 
     property_table = {
         (
