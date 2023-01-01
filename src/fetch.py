@@ -18,7 +18,7 @@ def fetch(symbol, property, database = utils.get_database(), table = utils.get_t
     raw_property = property
 
     conn = db.connect(database)
-    cursor = conn.cursor()
+    cur = conn.cursor()
 
     symbols = tuple(symbol)
     symbols = utils.tuple_to_sql_tuple_string(symbols)
@@ -31,7 +31,7 @@ def fetch(symbol, property, database = utils.get_database(), table = utils.get_t
 
     try:
         for s in symbol:
-            symbol_exists = cursor.execute(f"""
+            symbol_exists = cur.execute(f"""
                                 SELECT EXISTS(
                                     SELECT 1 
                                     FROM {table} 
@@ -40,7 +40,7 @@ def fetch(symbol, property, database = utils.get_database(), table = utils.get_t
             if symbol_exists == 0:
                 raise db.OperationalError
 
-        cursor.execute(f"""
+        cur.execute(f"""
                             SELECT {property} FROM {table}
                             WHERE symbol IN {symbols}
                         """)
@@ -50,13 +50,13 @@ def fetch(symbol, property, database = utils.get_database(), table = utils.get_t
         for s in symbol:
             put(download(s, raw_property))
 
-        cursor.execute(f"""
+        cur.execute(f"""
                             SELECT {property} FROM {table} 
                             WHERE symbol IN {symbols}
                         """)
 
-    columns = [description[0] for description in cursor.description]
-    df = pd.DataFrame(cursor.fetchall(), columns = columns)
+    columns = [description[0] for description in cur.description]
+    df = pd.DataFrame(cur.fetchall(), columns = columns)
 
     df = df.set_index("symbol")
     df = df.reindex(symbol)

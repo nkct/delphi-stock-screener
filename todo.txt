@@ -6,8 +6,6 @@ assert (
 
 declare each assert as a subtest
 
-normalize db cursor naming (cursor or cur)
-
 enchance function definitions
 
 add sql query printout for debugging
