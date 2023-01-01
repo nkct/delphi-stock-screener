@@ -8,26 +8,32 @@ import utils
 class TestUtils(unittest.TestCase):
 
     def test_tuple_to_sql_tuple_string(self):
-        s = utils.tuple_to_sql_tuple_string(('a', 'b'))
-        self.assertEqual(s, "('a', 'b')")
-        self.assertIsInstance(s, str)
-
-        s = utils.tuple_to_sql_tuple_string(('a',))
-        self.assertEqual(s, "('a')")
-
-        s = utils.tuple_to_sql_tuple_string(())
-        self.assertEqual(s, "()")
+        self.assertEqual(
+            utils.tuple_to_sql_tuple_string(('a', 'b')), 
+            "('a', 'b')"
+        )
+        self.assertEqual(
+            utils.tuple_to_sql_tuple_string(('a',)), 
+            "('a')"
+        )
+        self.assertEqual(
+            utils.tuple_to_sql_tuple_string(()), 
+            "()"
+        )
 
     def test_sql_tuple_string_to_tuple(self):
-        tup = utils.sql_tuple_string_to_tuple("('a', 'b')")
-        self.assertEqual(tup, ('a', 'b'))
-        self.assertIsInstance(tup, tuple)
-
-        tup = utils.sql_tuple_string_to_tuple("('a')")
-        self.assertEqual(tup, ('a',))
-
-        tup = utils.sql_tuple_string_to_tuple("()")
-        self.assertEqual(tup, ())
+        self.assertEqual(
+            utils.sql_tuple_string_to_tuple("('a', 'b')"), 
+            ('a', 'b')
+        )
+        self.assertEqual(
+            utils.sql_tuple_string_to_tuple("('a')"), 
+            ('a',)
+        )
+        self.assertEqual(
+            utils.sql_tuple_string_to_tuple("()"), 
+            ()
+        )
 
     def test_eval(self):
         self.assertTrue(utils.eval(12, ">", 3))
@@ -71,7 +77,10 @@ class TestUtils(unittest.TestCase):
 
     def test_alias_properties(self):
         props = ["Price", "TICKER", "MarketCap"]
-        self.assertEqual(utils.alias_properties(props), ["currentPrice", "symbol", "marketCap"])
+        self.assertEqual(
+            utils.alias_properties(props), 
+            ["currentPrice", "symbol", "marketCap"]
+        )
 
 
 if __name__ == '__main__':

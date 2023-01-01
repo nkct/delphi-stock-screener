@@ -1,9 +1,3 @@
-rewrite tests to be more concise and in the following format:
-assert (
-    function(test data),
-    expected result
-)
-
 declare each assert as a subtest
 
 enchance function definitions
