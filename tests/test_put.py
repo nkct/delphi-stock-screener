@@ -5,7 +5,7 @@ import os
 import json
 
 import sys
-sys.path.append('/home/nkct/Documents/projects/python/delphi/src')
+sys.path.append('/home/nkct/Documents/projects/python/delphi/')
 import utils
 
 from src.put import put

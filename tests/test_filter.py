@@ -4,8 +4,8 @@ import os
 import json
 
 import sys
-sys.path.append('/home/nkct/Documents/projects/python/delphi/src')
-import utils
+sys.path.append('/home/nkct/Documents/projects/python/delphi/')
+from src import utils
 
 from src.filter import filter as delphi_filter
 
