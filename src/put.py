@@ -5,16 +5,15 @@ import logging as log
 from src import utils
 
 def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_table()):
-    log.debug(f"put({df}, {database}, {table})")
+    log.debug(f"put(\n{df},\n {database}, {table})")
     
     conn = db.connect(database)
     cur = conn.cursor()
 
     df = df.fillna("Null")
 
-    columns = df.columns.values.tolist()
 
-    # check if table exists
+    # if table doesnt exist, create it
     cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table}';")
     if not cur.fetchall():
         cur.execute(f"""
@@ -24,15 +23,22 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
                     """)
         log.info(f"New Created table {table}")
 
+
+    # add columns that arent in the table
     cur.execute(f"PRAGMA table_info({table})")
     columns_currently_in_table = [col[1] for col in cur.fetchall()]
-    for column in columns:
-        if column not in columns_currently_in_table:
-            cur.execute(f"""
-                                ALTER TABLE {table}
-                                ADD {column} TEXT
-                            """)
-            log.info(f"New Altered table to add column: {column}")
+
+    columns = df.columns.values.tolist()
+
+    missing_columns = [col for col in columns if col not in columns_currently_in_table]
+
+    if missing_columns:
+        column_query_text = ""
+        for column in missing_columns:
+            column_query_text += f"ALTER TABLE {table} ADD {column} TEXT; \n"
+
+        cur.executescript(f"{column_query_text}")
+        log.info(f"New Altered table to add columns: {missing_columns}")
 
 
     while True:
