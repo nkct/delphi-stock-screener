@@ -12,6 +12,19 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
 
     df = df.fillna("Null")
 
+    columns = df.columns.values.tolist()
+
+    # check if table exists
+    cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table}';")
+    if not cur.fetchall():
+        cur.execute(f"""
+                        CREATE TABLE {table} (
+                            symbol TEXT
+                        )
+                    """)
+        log.info(f"New Created table {table}")
+
+
     while True:
         try:
             for row in df.iloc:
