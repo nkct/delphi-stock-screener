@@ -24,6 +24,16 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
                     """)
         log.info(f"New Created table {table}")
 
+    cur.execute(f"PRAGMA table_info({table})")
+    columns_currently_in_table = [col[1] for col in cur.fetchall()]
+    for column in columns:
+        if column not in columns_currently_in_table:
+            cur.execute(f"""
+                                ALTER TABLE {table}
+                                ADD {column} TEXT
+                            """)
+            log.info(f"New Altered table to add column: {column}")
+
 
     while True:
         try:
