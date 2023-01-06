@@ -10,7 +10,7 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
     conn = db.connect(database)
     cur = conn.cursor()
 
-    df = df.fillna("Null")
+    df = df.dropna(how="all").fillna("Null")
 
 
     # if table doesnt exist, create it
