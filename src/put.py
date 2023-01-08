@@ -41,6 +41,39 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
         log.info(f"New Altered table to add columns: {missing_columns}")
 
 
+    # select the values that are not in the database
+    sql_columns = utils.tuple_to_sql_tuple_string(tuple(columns)).replace("'", "")[1:-1]
+    symbols = utils.tuple_to_sql_tuple_string(tuple(df['symbol'].tolist()))
+
+    cur.execute(f"SELECT {sql_columns} FROM {table} WHERE symbol IN {symbols}")
+    missing_values = []
+    for index, row in enumerate(df.iloc):
+        fetch_result = cur.fetchall()
+        missing_values.append([
+            value for value in row if 
+                (index >= len(fetch_result)) or 
+                (value not in fetch_result[index])
+        ])
+    
+    print(missing_values)
+    print(sql_columns)
+    # if there are any missing values, insert them
+    if missing_values:
+        missing_values = [utils.tuple_to_sql_tuple_string(tuple(row)) + "," for row in missing_values]
+        # remove the trailing comma
+        missing_values[-1] = missing_values[-1][:-1]
+        insertable_values = "".join(f"{row} \n" for row in missing_values)
+
+        cur.execute(f"""
+                        INSERT INTO {table}
+                        ({sql_columns})
+                        VALUES
+                        {insertable_values};
+                    """)
+        conn.commit()
+        log.info(f"New Inserted into table: {table}, Rows affected: {cur.rowcount}")
+
+
     while True:
         try:
             for row in df.iloc:
