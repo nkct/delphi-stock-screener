@@ -47,18 +47,18 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
 
     cur.execute(f"SELECT {sql_columns} FROM {table} WHERE symbol IN {symbols}")
     missing_values = []
-    for index, row in enumerate(df.iloc):
-        fetch_result = cur.fetchall()
-        missing_values.append([
-            value for value in row if 
-                (index >= len(fetch_result)) or 
-                (value not in fetch_result[index])
-        ])
-    
-    print(missing_values)
-    print(sql_columns)
+    fetch_result = cur.fetchall()
+    for row_index, row in enumerate(df.iloc):
+        if row_index >= len(fetch_result):
+            missing_values.append(list(row.values))
+        else:
+            missing_values.append([
+                value for value in row if
+                list(row.values).index(value) >= len(fetch_result[row_index])
+            ])
+
     # if there are any missing values, insert them
-    if missing_values:
+    if any(missing_values):
         missing_values = [utils.tuple_to_sql_tuple_string(tuple(row)) + "," for row in missing_values]
         # remove the trailing comma
         missing_values[-1] = missing_values[-1][:-1]
