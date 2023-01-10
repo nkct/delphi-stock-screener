@@ -4,4 +4,6 @@ enchance function definitions
 
 add sql query printout for debugging
 
-clean up imports (src. is not nessecarily needed)
+drop entirely empty rows
+
+add tests to put for override, override and add, update column

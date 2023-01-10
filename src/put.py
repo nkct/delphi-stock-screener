@@ -41,12 +41,13 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
         log.info(f"New Altered table to add columns: {missing_columns}")
 
 
-    # select the values that are not in the database
     sql_columns = utils.tuple_to_sql_tuple_string(tuple(columns)).replace("'", "")[1:-1]
     symbols = utils.tuple_to_sql_tuple_string(tuple(df['symbol'].tolist()))
 
+    # select the values that are not in the database and those that differ from the database
     cur.execute(f"SELECT {sql_columns} FROM {table} WHERE symbol IN {symbols}")
     missing_values = []
+    differing_values = []
     fetch_result = cur.fetchall()
     for row_index, row in enumerate(df.iloc):
         if row_index >= len(fetch_result):
@@ -55,6 +56,12 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
             missing_values.append([
                 value for value in row if
                 list(row.values).index(value) >= len(fetch_result[row_index])
+            ])
+            differing_values.append([
+                value for value in row if
+                not (list(row.values).index(value) >= len(fetch_result[row_index])) and
+                value not in fetch_result[row_index] or
+                row.index[list(row.values).index(value)] == "symbol"
             ])
 
     # if there are any missing values, insert them
@@ -73,78 +80,21 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
         conn.commit()
         log.info(f"New Inserted into table: {table}, Rows affected: {cur.rowcount}")
 
+    if any(differing_values):
+        for index, row in enumerate(differing_values):
+            changes = []
+            for value in row:
+                # get trid of unnecessary floats
+                if isinstance(value, float) and value.is_integer():
+                    value = int(value)
+                changes.append(f"{df.iloc[index].index[row.index(value)]} = '{value}'")
+            changes = str(changes)[1:-1].replace("\"", "")
 
-    while True:
-        try:
-            for row in df.iloc:
-                changes = []
-                for value in row:
-                    # get trid of unnecessary floats
-                    if isinstance(value, float) and value.is_integer():
-                        value = int(value)
-                    changes.append(f"{row.index[list(row.values).index(value)]} = '{value}'")
-                changes = str(changes)[1:-1].replace("\"", "")
-
-                cur.execute(f"""
-                                UPDATE {table}
-                                SET {changes}
-                                WHERE symbol = '{row[0]}'
-                            """)
-                
-                conn.commit()
-
-
-            if cur.rowcount == 0:
-
-                columns = utils.tuple_to_sql_tuple_string(tuple(df.columns.values.tolist()))
-                sql_columns = columns.replace("'", "")
-
-                values = ""
-                for row in df.head(-1).iloc:
-                    values += utils.tuple_to_sql_tuple_string(tuple(
-                        map(
-                            lambda value: int(value) if isinstance(value, float) and value.is_integer() else value, 
-                            row.tolist()))
-                        ) + ","
-                values += utils.tuple_to_sql_tuple_string(tuple(df.iloc[-1].tolist()))
-
-                cur.execute(f"""
-                                INSERT INTO {table}
-                                {sql_columns}
-                                VALUES
-                                {values};
-                            """)
-
-                conn.commit()
-
-                log.info(f"Inserted into table: {table}, Rows affected: {cur.rowcount}")
-            else:
-                log.info(f"Updated values in table table: {table}, Rows affected: {cur.rowcount}")
-
-
-            cur.close()
-            conn.close()
-
-            break
-        except db.OperationalError as e:
-            #column not found
-            if str(e).startswith("no such column:"):
-                column = str(e)[16:]
-                cur.execute(f"""
-                                ALTER TABLE {table}
-                                ADD {column} TEXT
-                            """)
-                log.info(f"Altered table to add column: {column}")
-                continue
-            # table not found
-            elif str(e).startswith("no such table:"):
-                cur.execute(f"""
-                                CREATE TABLE {table} (
-                                    symbol TEXT
-                                )
-                            """)
-                log.info(f"Created table {table}")
-                continue
-            else:
-                log.error(f"Error while inserting into {table}: {e}")
-                break
+            cur.execute(f"""
+                            UPDATE {table}
+                            SET {changes}
+                            WHERE symbol = '{row[0]}'
+                        """)
+        
+            conn.commit()
+            log.info(f"New Updated values in table table: {table}, Rows affected: {cur.rowcount}") 

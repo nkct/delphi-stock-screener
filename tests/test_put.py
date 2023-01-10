@@ -3,10 +3,11 @@ import sqlite3 as db
 import pandas as pd
 import os
 import json
+import logging as log
 
 import sys
 sys.path.append('/home/nkct/Documents/projects/python/delphi/')
-import utils
+import src.utils as utils
 
 from src.put import put
 
@@ -27,6 +28,9 @@ class TestPut(unittest.TestCase):
 
         with open("settings.json", "w") as f:
             json.dump(settings, f)
+
+        log.basicConfig(level=log.INFO)
+
 
     def setUp(self):
         database = utils.get_database()
@@ -181,6 +185,33 @@ class TestPut(unittest.TestCase):
                 ('17', '3', '87', 'gejh'), 
                 ('TIC', 'kgl', '432', 'olcx'), 
                 (' ', '9684', 'Null', 'mgjn')
+            ]
+        )
+
+    def test_put_update_column(self):
+        df = pd.DataFrame({
+            "symbol": ["SYM", "BOL", "TIC", "KER"], 
+            "int1": [975, 3, 12, 9684], 
+            "int2": [62, 87, 432, 5687], 
+            "str": ["hgli", "gejh", "olcx", "mgjn"]
+        })
+        put(df, "test.db", "test")
+
+        df = pd.DataFrame({
+            "symbol": ["SYM", "BOL", "TIC", "KER"], 
+            "str": ["esr", "iojp", "nbgfe", "kopf"]
+        })
+        put(df, "test.db", "test")
+
+        self.cur.execute(f"SELECT * FROM {self.table}")
+
+        self.assertEqual(
+            self.cur.fetchall(),
+            [
+                ('SYM', '975', '62', 'esr'), 
+                ('BOL', '3', '87', 'iojp'), 
+                ('TIC', '12', '432', 'nbgfe'), 
+                ('KER', '9684', '5687', 'kopf')
             ]
         )
 

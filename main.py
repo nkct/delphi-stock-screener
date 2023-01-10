@@ -43,7 +43,7 @@ args = parser.parse_args()
 
 indices = json.load(open("indices.json"))
 
-logging_level = log.WARNING
+logging_level = log.INFO
 log.basicConfig(level = logging_level)
 
 
