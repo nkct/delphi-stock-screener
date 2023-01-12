@@ -50,19 +50,21 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
     differing_values = []
     fetch_result = cur.fetchall()
     for row_index, row in enumerate(df.iloc):
+        values = utils.flaten_floats(list(row.values))
         if row_index >= len(fetch_result):
-            missing_values.append(list(row.values))
+            missing_values.append(values)
         else:
-            missing_values.append([
-                value for value in row if
-                list(row.values).index(value) >= len(fetch_result[row_index])
-            ])
-            differing_values.append([
-                value for value in row if
-                not (list(row.values).index(value) >= len(fetch_result[row_index])) and
-                value not in fetch_result[row_index] or
-                row.index[list(row.values).index(value)] == "symbol"
-            ])
+            missing_values.append([])
+            differing_values.append([])
+            for value in row:
+                if values.index(value) >= len(fetch_result[row_index]):
+                    missing_values[row_index].append(value)
+
+                if (not (values.index(value) >= len(fetch_result[row_index])) and
+                    value not in fetch_result[row_index] or
+                    row.index[values.index(value)] == "symbol"):
+                        differing_values[row_index].append(value)
+
 
     # if there are any missing values, insert them
     if any(missing_values):
