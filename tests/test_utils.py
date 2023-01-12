@@ -3,7 +3,7 @@ import unittest
 
 import sys
 sys.path.append('/home/nkct/Documents/projects/python/delphi/')
-import utils
+import src.utils as utils
 
 class TestUtils(unittest.TestCase):
 
@@ -80,6 +80,13 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(
             utils.alias_properties(props), 
             ["currentPrice", "symbol", "marketCap"]
+        )
+
+    def test_flaten_floats(self):
+        floats = [13.5, 1.0, 7423.71, 213.0]
+        self.assertEqual(
+            utils.flaten_floats(floats),
+            [13.5, 1, 7423.71, 213]
         )
 
 
