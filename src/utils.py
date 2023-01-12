@@ -114,3 +114,10 @@ def get_table():
     f.close()
 
     return settings["database"]["table"]
+
+def flaten_floats(floats):
+    for index, f in enumerate(floats):
+        if isinstance(f, float) and f.is_integer():
+                    floats[index] = int(f)
+
+    return floats
