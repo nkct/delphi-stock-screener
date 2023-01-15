@@ -2,8 +2,4 @@ declare each assert as a subtest
 
 enchance function definitions
 
-add sql query printout for debugging
-
-drop entirely empty rows
-
-add tests to put for override, override and add, update column
+in put allow for updating multiple rowsa at a time

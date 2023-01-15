@@ -14,18 +14,24 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
 
 
     # if table doesnt exist, create it
-    cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table}';")
+    table_check_query = f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table}';"
+    log.debug(f"table_check_query: {table_check_query}")
+    cur.execute(table_check_query)
     if not cur.fetchall():
-        cur.execute(f"""
-                        CREATE TABLE {table} (
-                            symbol TEXT
-                        )
-                    """)
-        log.info(f"New Created table {table}")
+        create_table_query = f"""
+                                  CREATE TABLE {table} (
+                                      symbol TEXT
+                                  )
+                              """
+        log.debug(f"create_table_query: {create_table_query}")
+        cur.execute(create_table_query)
+        log.info(f"Created table {table}")
 
 
     # add columns that arent in the table
-    cur.execute(f"PRAGMA table_info({table})")
+    column_check_query = f"PRAGMA table_info({table})"
+    log.debug(f"column_check_query: {column_check_query}")
+    cur.execute(column_check_query)
     columns_currently_in_table = [col[1] for col in cur.fetchall()]
 
     columns = df.columns.values.tolist()
@@ -33,19 +39,22 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
     missing_columns = [col for col in columns if col not in columns_currently_in_table]
 
     if missing_columns:
-        column_query_text = ""
+        add_columns_query = ""
         for column in missing_columns:
-            column_query_text += f"ALTER TABLE {table} ADD {column} TEXT; \n"
+            add_columns_query += f"ALTER TABLE {table} ADD {column} TEXT; \n"
 
-        cur.executescript(f"{column_query_text}")
-        log.info(f"New Altered table to add columns: {missing_columns}")
+        log.debug(f"add_columns_query: {add_columns_query}")
+        cur.executescript(add_columns_query)
+        log.info(f"Altered table to add columns: {missing_columns}")
 
 
     sql_columns = utils.tuple_to_sql_tuple_string(tuple(columns)).replace("'", "")[1:-1]
     symbols = utils.tuple_to_sql_tuple_string(tuple(df['symbol'].tolist()))
 
     # select the values that are not in the database and those that differ from the database
-    cur.execute(f"SELECT {sql_columns} FROM {table} WHERE symbol IN {symbols}")
+    values_check_query = f"SELECT {sql_columns} FROM {table} WHERE symbol IN {symbols}"
+    log.debug(f"values_check_query: {values_check_query}")
+    cur.execute(values_check_query)
     missing_values = []
     differing_values = []
     fetch_result = cur.fetchall()
@@ -73,14 +82,16 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
         missing_values[-1] = missing_values[-1][:-1]
         insertable_values = "".join(f"{row} \n" for row in missing_values)
 
-        cur.execute(f"""
-                        INSERT INTO {table}
-                        ({sql_columns})
-                        VALUES
-                        {insertable_values};
-                    """)
+        insert_values_query = f"""
+                                   INSERT INTO {table}
+                                   ({sql_columns})
+                                   VALUES
+                                   {insertable_values};
+                               """
+        log.debug(f"insert_values_query: {insert_values_query}")
+        cur.execute(insert_values_query)
         conn.commit()
-        log.info(f"New Inserted into table: {table}, Rows affected: {cur.rowcount}")
+        log.info(f"Inserted into table: {table}, Rows affected: {cur.rowcount}")
 
     if any(differing_values):
         for index, row in enumerate(differing_values):
@@ -92,11 +103,13 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
                 changes.append(f"{df.iloc[index].index[row.index(value)]} = '{value}'")
             changes = str(changes)[1:-1].replace("\"", "")
 
-            cur.execute(f"""
-                            UPDATE {table}
-                            SET {changes}
-                            WHERE symbol = '{row[0]}'
-                        """)
+            update_values_query = f"""
+                                       UPDATE {table}
+                                       SET {changes}
+                                       WHERE symbol = '{row[0]}'
+                                   """
+            log.debug(f"update_values_query: {update_values_query}")
+            cur.execute(update_values_query)
         
             conn.commit()
-            log.info(f"New Updated values in table table: {table}, Rows affected: {cur.rowcount}") 
+            log.info(f"Updated values in table table: {table}, Rows affected: {cur.rowcount}") 
