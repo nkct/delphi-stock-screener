@@ -62,14 +62,14 @@ def run(indices, args):
 
 
     symbols = args.symbols[0].split()
-    symbols = utils.alias_symbols(symbols)
+    symbols = utils.map_alias_over(symbols)
     symbols = utils.indices_to_keys(symbols, indices)
 
     if args.filter:
         symbols = delphi_filter(symbols, args.filter)
 
     if args.sort:
-        symbols = sort(symbols, args.sort, args.descending)
+        symbols = sort(symbols, utils.map_alias_over(args.sort), args.descending)
 
     if args.new_index:
         helpers.new_index(args.new_index, indices, symbols)

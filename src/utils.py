@@ -85,8 +85,8 @@ def alias_properties(properties):
     return list(map(alias, properties))
 
 # maps alias over symbols
-def alias_symbols(symbols):
-    return list(map(alias, symbols))
+def map_alias_over(raw):
+    return list(map(alias, raw))
 
 # if the symbol is an index, changes it to all the symbols in that index
 def indices_to_keys(symbols, indices):

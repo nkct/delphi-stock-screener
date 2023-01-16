@@ -6,8 +6,6 @@ from src.fetch import fetch
 def sort(symbols, sorters, descending):
     log.debug(f"sort({symbols}, {sorters}, {descending})")
 
-    sorters = list(map(utils.alias, sorters))
-
     if "symbol" not in sorters:
         sorters.append("symbol")
 
