@@ -1,6 +1,5 @@
 import logging as log
 
-from src import utils
 from src.fetch import fetch
 
 def sort(symbols, sorters, descending):
