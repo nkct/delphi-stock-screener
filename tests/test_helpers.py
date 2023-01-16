@@ -21,14 +21,26 @@ class TestHelpers(unittest.TestCase):
         conn = db.connect(test_db)
         cur = conn.cursor()
 
-        cur.execute(f"CREATE TABLE {test_table} ( test TEXT )")
+        with self.subTest(i=1):
+            cur.execute(f"CREATE TABLE {test_table} ( test TEXT )")
 
-        helpers.clear(test_db, test_table)
+            helpers.clear(test_db, test_table)
 
-        self.assertTrue(
-            cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{test_table}';")
-        )
+            self.assertTrue(
+                cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{test_table}';")
+            )
 
+        with self.subTest(i=2):
+            cur.execute(f"CREATE TABLE {test_table} ( test TEXT )")
+
+            with self.assertRaises(db.OperationalError) as e:
+                helpers.clear(test_db, "not_test")
+
+            self.assertEqual(
+                str(e.exception),
+                "no such table: not_test"
+            )
+            
         os.remove(test_db)
 
     def test_available_properties(self):
