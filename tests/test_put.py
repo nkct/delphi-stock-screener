@@ -12,9 +12,12 @@ import src.utils as utils
 from src.put import put
 
 class TestPut(unittest.TestCase):
+    testing_level = "WARNING"
 
     @classmethod
     def setUpClass(cls):
+        log.basicConfig(level=cls.testing_level)
+        
         # STRICTLY FOR TESTING! CHANGE BACK AFTER USE!
         f = open("settings.json")
         settings = json.loads(f.read())
@@ -29,7 +32,6 @@ class TestPut(unittest.TestCase):
         with open("settings.json", "w") as f:
             json.dump(settings, f)
 
-        log.basicConfig(level=log.INFO)
 
 
     def setUp(self):
@@ -260,4 +262,6 @@ class TestPut(unittest.TestCase):
         os.remove("test.db")
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        TestPut.testing_level = sys.argv.pop()
     unittest.main()

@@ -2,6 +2,7 @@ import unittest
 import sqlite3 as db
 import os
 import json
+import logging as log
 
 import sys
 sys.path.append('/home/nkct/Documents/projects/python/delphi/')
@@ -10,9 +11,12 @@ from src import utils
 from src.filter import filter as delphi_filter
 
 class TestFilter(unittest.TestCase):
-
+    testing_level = "WARNING"
+    
     @classmethod
     def setUpClass(cls):
+        log.basicConfig(level = cls.testing_level)
+
         # STRICTLY FOR TESTING! CHANGE BACK AFTER USE!
         f = open("settings.json")
         settings = json.loads(f.read())
@@ -90,4 +94,6 @@ class TestFilter(unittest.TestCase):
         os.remove("test.db")
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        TestFilter.testing_level = sys.argv.pop()
     unittest.main()

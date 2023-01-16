@@ -2,17 +2,21 @@ import unittest
 import sqlite3 as db
 import os
 import json
+import logging as log
 
 import sys
 sys.path.append('/home/nkct/Documents/projects/python/delphi/')
-import utils
+import src.utils as utils
 
 from src.sort import sort
 
 class TestSort(unittest.TestCase):
-
+    testing_level = "WARNING"
+    
     @classmethod
     def setUpClass(cls):
+        log.basicConfig(level = cls.testing_level)
+
         # STRICTLY FOR TESTING! CHANGE BACK AFTER USE!
         f = open("settings.json")
         settings = json.loads(f.read())
@@ -55,20 +59,20 @@ class TestSort(unittest.TestCase):
 
     def test_sort(self):
         self.assertEqual(
-            sort(["SYM", "BOL", "TIC", "KER"], {"int1"}, True),
+            sort(["SYM", "BOL", "TIC", "KER"], ["int1"], True),
             ["BOL", "SYM", "TIC", "KER"]
         )
         self.assertEqual(
-            sort(["SYM", "BOL", "TIC", "KER"], {"int1"}, False),
+            sort(["SYM", "BOL", "TIC", "KER"], ["int1"], False),
             ["KER", "TIC", "SYM", "BOL"]
         )
         # doesnt pass because numbers are stored as text
         self.assertEqual(
-            sort(["SYM", "BOL", "TIC", "KER"], {"int2"}, False),
+            sort(["SYM", "BOL", "TIC", "KER"], ["int2"], False),
             ["TIC", "SYM", "BOL", "KER"]
         )
         self.assertEqual(
-            sort(["SYM", "BOL", "TIC", "KER"], {"str"}, False),
+            sort(["SYM", "BOL", "TIC", "KER"], ["str"], False),
             ["TIC", "BOL", "KER", "SYM"]
         )
 
@@ -87,4 +91,6 @@ class TestSort(unittest.TestCase):
         os.remove("test.db")
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        TestSort.testing_level = sys.argv.pop()
     unittest.main()

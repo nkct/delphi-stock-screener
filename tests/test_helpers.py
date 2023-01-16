@@ -9,10 +9,11 @@ sys.path.append('/home/nkct/Documents/projects/python/delphi/')
 import src.helpers as helpers
 
 class TestHelpers(unittest.TestCase):
+    testing_level = "WARNING"
     
     @classmethod
     def setUpClass(cls):
-        log.basicConfig(level=log.DEBUG)
+        log.basicConfig(level = cls.testing_level)
 
     def test_clear(self):
         test_db = "test.db"
@@ -56,4 +57,6 @@ class TestHelpers(unittest.TestCase):
         pass
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        TestHelpers.testing_level = sys.argv.pop()
     unittest.main()

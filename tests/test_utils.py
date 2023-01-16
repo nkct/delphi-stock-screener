@@ -1,11 +1,16 @@
-from email import utils
 import unittest
+import logging as log
 
 import sys
 sys.path.append('/home/nkct/Documents/projects/python/delphi/')
 import src.utils as utils
 
 class TestUtils(unittest.TestCase):
+    testing_level = "WARNING"
+    
+    @classmethod
+    def setUpClass(cls):
+        log.basicConfig(level = cls.testing_level)
 
     def test_tuple_to_sql_tuple_string(self):
         self.assertEqual(
@@ -91,4 +96,6 @@ class TestUtils(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        TestUtils.testing_level = sys.argv.pop()
     unittest.main()
