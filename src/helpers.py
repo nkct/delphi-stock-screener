@@ -7,17 +7,20 @@ import sqlite3 as db
 
 from src import utils
 
-# drop the provided table in the provided databse
-def clear(conn: db.Connection, table: str):
-    log.debug(f"clear({conn}, {table})")
+# drop the provided table in the designated databse
+def clear(database: str = utils.get_database(), table: str = utils.get_table()):
+    log.debug(f"clear({database}, {table})")
 
+    conn = db.connect(database)
     cur = conn.cursor()
 
-    cur.execute(f"""
-                    DROP TABLE {table}
-                """)
+    table_drop_query = f"""
+                            DROP TABLE {table}
+                        """
+    log.debug(table_drop_query)
+    cur.execute(table_drop_query)
 
-    log.info(f"Clearing table: {table}, Rows affected: {cur.rowcount}")
+    log.info(f"Cleared table: {table}, Rows affected: {cur.rowcount}")
 
 def available_properties():
     property_table = {
