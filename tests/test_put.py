@@ -62,7 +62,7 @@ class TestPut(unittest.TestCase):
         self.assertEqual(
             self.cur.fetchall(),
             [
-                ('SYM', '975', '62', 'hgli')
+                ('SYM', 975, 62, 'hgli')
             ]
         )
 
@@ -80,10 +80,10 @@ class TestPut(unittest.TestCase):
         self.assertEqual(
             self.cur.fetchall(),
             [
-                ('SYM', '975', '62', 'hgli'), 
-                ('BOL', '3', '87', 'gejh'), 
-                ('TIC', '12', '432', 'olcx'), 
-                ('KER', '9684', '5687', 'mgjn')
+                ('SYM', 975, 62, 'hgli'), 
+                ('BOL', 3, 87, 'gejh'), 
+                ('TIC', 12, 432, 'olcx'), 
+                ('KER', 9684, 5687, 'mgjn')
             ]
         )
 
@@ -109,10 +109,10 @@ class TestPut(unittest.TestCase):
         self.assertEqual(
             self.cur.fetchall(),
             [
-                ('SYM', '9876', '0', 'gyujs'), 
-                ('BOL', '45', '38', 'kj'), 
-                ('TIC', '9', '43879', 'rt'), 
-                ('KER', '53', '87', 'k')
+                ('SYM', 9876, 0, 'gyujs'), 
+                ('BOL', 45, 38, 'kj'), 
+                ('TIC', 9, 43879, 'rt'), 
+                ('KER', 53, 87, 'k')
             ]
         )
 
@@ -139,10 +139,10 @@ class TestPut(unittest.TestCase):
         self.assertEqual(
             self.cur.fetchall(),
             [
-                ('SYM', '9876', '0', 'gyujs', 'hjf'), 
-                ('BOL', '45', '38', 'kj', 'jret'), 
-                ('TIC', '9', '43879', 'rt', 'iurt'), 
-                ('KER', '53', '87', 'k', 'ihyk')
+                ('SYM', 9876, 0, 'gyujs', 'hjf'), 
+                ('BOL', 45, 38, 'kj', 'jret'), 
+                ('TIC', 9, 43879, 'rt', 'iurt'), 
+                ('KER', 53, 87, 'k', 'ihyk')
             ]
         )
 
@@ -162,10 +162,10 @@ class TestPut(unittest.TestCase):
         self.assertEqual(
             self.cur.fetchall(),
             [
-                ('SYM', '975', '62', 'hgli'), 
-                ('BOL', '3', '87', 'gejh'), 
-                ('TIC', '12', '432', 'olcx'), 
-                ('KER', '9684', '5687', 'mgjn')
+                ('SYM', 975, 62, 'hgli'), 
+                ('BOL', 3, 87, 'gejh'), 
+                ('TIC', 12, 432, 'olcx'), 
+                ('KER', 9684, 5687, 'mgjn')
             ]
         )
 
@@ -210,10 +210,10 @@ class TestPut(unittest.TestCase):
         self.assertEqual(
             self.cur.fetchall(),
             [
-                ('SYM', '975', '62', 'esr'), 
-                ('BOL', '3', '87', 'iojp'), 
-                ('TIC', '12', '432', 'nbgfe'), 
-                ('KER', '9684', '5687', 'kopf')
+                ('SYM', 975, 62, 'esr'), 
+                ('BOL', 3, 87, 'iojp'), 
+                ('TIC', 12, 432, 'nbgfe'), 
+                ('KER', 9684, 5687, 'kopf')
             ]
         )
 
@@ -237,10 +237,10 @@ class TestPut(unittest.TestCase):
         self.assertEqual(
             self.cur.fetchall(),
             [
-                ('SYM', '975', '62', 'hgli', 'esr'), 
-                ('BOL', '3', '87', 'gejh', 'iojp'), 
-                ('TIC', '12', '432', 'olcx', 'nbgfe'), 
-                ('KER', '9684', '5687', 'mgjn', 'kopf')
+                ('SYM', 975, 62, 'hgli', 'esr'), 
+                ('BOL', 3, 87, 'gejh', 'iojp'), 
+                ('TIC', 12, 432, 'olcx', 'nbgfe'), 
+                ('KER', 9684, 5687, 'mgjn', 'kopf')
             ]
         )
 

@@ -41,7 +41,10 @@ def put(df: pd.DataFrame, database = utils.get_database(), table = utils.get_tab
     if missing_columns:
         add_columns_query = ""
         for column in missing_columns:
-            add_columns_query += f"ALTER TABLE {table} ADD {column} TEXT; \n"
+            data_type = "TEXT"
+            if all([str(value).isnumeric() for value in df[column].values]):
+                data_type = "INTEGER"
+            add_columns_query += f"ALTER TABLE {table} ADD {column} {data_type}; \n"
 
         log.debug(f"add_columns_query: {add_columns_query}")
         cur.executescript(add_columns_query)
