@@ -41,8 +41,8 @@ class TestSort(unittest.TestCase):
         cur.execute(f"""
                         CREATE TABLE {table} (
                             symbol TEXT,
-                            int1 TEXT,
-                            int2 TEXT,
+                            int1 INTEGER,
+                            int2 INTEGER,
                             str TEXT
                         );
                     """)
@@ -50,10 +50,10 @@ class TestSort(unittest.TestCase):
         cur.execute(f"""
                         INSERT INTO {table}
                         VALUES
-                        ('SYM', '100', '500', 'abcde'),
-                        ('BOL', '10', '10', 'fghij'),
-                        ('TIC', '200', '731', 'qwert'),
-                        ('KER', '3000', '3', 'asdfg');
+                        ('SYM', 100, 500, 'abcde'),
+                        ('BOL', 10, 10, 'fghij'),
+                        ('TIC', 200, 731, 'qwert'),
+                        ('KER', 3000, 3, 'asdfg');
                     """)
         conn.commit()
 
@@ -66,7 +66,6 @@ class TestSort(unittest.TestCase):
             sort(["SYM", "BOL", "TIC", "KER"], ["int1"], False),
             ["KER", "TIC", "SYM", "BOL"]
         )
-        # doesnt pass because numbers are stored as text
         self.assertEqual(
             sort(["SYM", "BOL", "TIC", "KER"], ["int2"], False),
             ["TIC", "SYM", "BOL", "KER"]
