@@ -58,26 +58,31 @@ class TestFilter(unittest.TestCase):
         conn.commit()
 
     def test_filter(self):
-        self.assertEqual(
-            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["int1 < 200"]),
-            ["SYM", "BOL"]
-        )
-        self.assertEqual(
-            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["int1 == int2"]),
-            ["BOL"]
-        )
-        self.assertEqual(
-            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["str == \"qwert\""]),
-            ["TIC"]
-        )
-        self.assertEqual(
-            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["str > \"b\""]),
-            ["BOL", "TIC"]
-        )
-        self.assertEqual(
-            delphi_filter(["SYM", "BOL", "TIC", "KER"], ["int1 < 200", "int2 > 50"]),
-            ["SYM"]
-        )
+        with self.subTest(i=1):
+            self.assertEqual(
+                delphi_filter(["SYM", "BOL", "TIC", "KER"], ["int1 < 200"]),
+                ["SYM", "BOL"]
+            )
+        with self.subTest(i=2):
+            self.assertEqual(
+                delphi_filter(["SYM", "BOL", "TIC", "KER"], ["int1 == int2"]),
+                ["BOL"]
+            )
+        with self.subTest(i=3):
+            self.assertEqual(
+                delphi_filter(["SYM", "BOL", "TIC", "KER"], ["str == \"qwert\""]),
+                ["TIC"]
+            )
+        with self.subTest(i=4):
+            self.assertEqual(
+                delphi_filter(["SYM", "BOL", "TIC", "KER"], ["str > \"b\""]),
+                ["BOL", "TIC"]
+            )
+        with self.subTest(i=5):
+            self.assertEqual(
+                delphi_filter(["SYM", "BOL", "TIC", "KER"], ["int1 < 200", "int2 > 50"]),
+                ["SYM"]
+            )
 
     @classmethod
     def tearDownClass(cls):

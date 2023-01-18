@@ -58,22 +58,26 @@ class TestSort(unittest.TestCase):
         conn.commit()
 
     def test_sort(self):
-        self.assertEqual(
-            sort(["SYM", "BOL", "TIC", "KER"], ["int1"], True),
-            ["BOL", "SYM", "TIC", "KER"]
-        )
-        self.assertEqual(
-            sort(["SYM", "BOL", "TIC", "KER"], ["int1"], False),
-            ["KER", "TIC", "SYM", "BOL"]
-        )
-        self.assertEqual(
-            sort(["SYM", "BOL", "TIC", "KER"], ["int2"], False),
-            ["TIC", "SYM", "BOL", "KER"]
-        )
-        self.assertEqual(
-            sort(["SYM", "BOL", "TIC", "KER"], ["str"], False),
-            ["TIC", "BOL", "KER", "SYM"]
-        )
+        with self.subTest(i=1):
+            self.assertEqual(
+                sort(["SYM", "BOL", "TIC", "KER"], ["int1"], True),
+                ["BOL", "SYM", "TIC", "KER"]
+            )
+        with self.subTest(i=2):
+            self.assertEqual(
+                sort(["SYM", "BOL", "TIC", "KER"], ["int1"], False),
+                ["KER", "TIC", "SYM", "BOL"]
+            )
+        with self.subTest(i=3):
+            self.assertEqual(
+                sort(["SYM", "BOL", "TIC", "KER"], ["int2"], False),
+                ["TIC", "SYM", "BOL", "KER"]
+            )
+        with self.subTest(i=4):
+            self.assertEqual(
+                sort(["SYM", "BOL", "TIC", "KER"], ["str"], False),
+                ["TIC", "BOL", "KER", "SYM"]
+            )
 
     @classmethod
     def tearDownClass(cls):

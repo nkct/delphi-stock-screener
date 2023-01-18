@@ -13,63 +13,75 @@ class TestUtils(unittest.TestCase):
         log.basicConfig(level = cls.testing_level)
 
     def test_tuple_to_sql_tuple_string(self):
-        self.assertEqual(
-            utils.tuple_to_sql_tuple_string(('a', 'b')), 
-            "('a', 'b')"
-        )
-        self.assertEqual(
-            utils.tuple_to_sql_tuple_string(('a',)), 
-            "('a')"
-        )
-        self.assertEqual(
-            utils.tuple_to_sql_tuple_string(()), 
-            "()"
-        )
+        with self.subTest(i=1):
+            self.assertEqual(
+                utils.tuple_to_sql_tuple_string(('a', 'b')), 
+                "('a', 'b')"
+            )
+        with self.subTest(i=2):
+            self.assertEqual(
+                utils.tuple_to_sql_tuple_string(('a',)), 
+                "('a')"
+            )
+        with self.subTest(i=3):
+            self.assertEqual(
+                utils.tuple_to_sql_tuple_string(()), 
+                "()"
+            )
 
     def test_sql_tuple_string_to_tuple(self):
-        self.assertEqual(
-            utils.sql_tuple_string_to_tuple("('a', 'b')"), 
-            ('a', 'b')
-        )
-        self.assertEqual(
-            utils.sql_tuple_string_to_tuple("('a')"), 
-            ('a',)
-        )
-        self.assertEqual(
-            utils.sql_tuple_string_to_tuple("()"), 
-            ()
-        )
+        with self.subTest(i=1):
+            self.assertEqual(
+                utils.sql_tuple_string_to_tuple("('a', 'b')"), 
+                ('a', 'b')
+            )
+        with self.subTest(i=2):
+            self.assertEqual(
+                utils.sql_tuple_string_to_tuple("('a')"), 
+                ('a',)
+            )
+        with self.subTest(i=3):
+            self.assertEqual(
+                utils.sql_tuple_string_to_tuple("()"), 
+                ()
+            )
 
     def test_eval(self):
-        self.assertTrue(utils.eval(12, ">", 3))
-        self.assertTrue(utils.eval(12, ">", -32))
-        self.assertTrue(utils.eval("c", ">", "a"))
+        with self.subTest(i=1):
+            self.assertTrue(utils.eval(12, ">", 3))
+            self.assertTrue(utils.eval(12, ">", -32))
+            self.assertTrue(utils.eval("c", ">", "a"))
 
-        self.assertTrue(utils.eval(5, "<", 27))
-        self.assertTrue(utils.eval(-82, "<", 31))
-        self.assertTrue(utils.eval("d", "<", "k"))
+        with self.subTest(i=2):
+            self.assertTrue(utils.eval(5, "<", 27))
+            self.assertTrue(utils.eval(-82, "<", 31))
+            self.assertTrue(utils.eval("d", "<", "k"))
 
-        self.assertTrue(utils.eval(9, ">=", 6))
-        self.assertTrue(utils.eval(43, ">=", 43))
-        self.assertTrue(utils.eval(6, ">=", -74))
-        self.assertTrue(utils.eval(-3, ">=", -3))
-        self.assertTrue(utils.eval("l", ">=", "b"))
-        self.assertTrue(utils.eval("z", ">=", "z"))
+        with self.subTest(i=3):
+            self.assertTrue(utils.eval(9, ">=", 6))
+            self.assertTrue(utils.eval(43, ">=", 43))
+            self.assertTrue(utils.eval(6, ">=", -74))
+            self.assertTrue(utils.eval(-3, ">=", -3))
+            self.assertTrue(utils.eval("l", ">=", "b"))
+            self.assertTrue(utils.eval("z", ">=", "z"))
 
-        self.assertTrue(utils.eval(1, "<=", 10))
-        self.assertTrue(utils.eval(2, "<=", 2))
-        self.assertTrue(utils.eval(-27, "<=", 12))
-        self.assertTrue(utils.eval(-10, "<=", -10))
-        self.assertTrue(utils.eval("h", "<=", "m"))
-        self.assertTrue(utils.eval("p", "<=", "p"))
+        with self.subTest(i=4):
+            self.assertTrue(utils.eval(1, "<=", 10))
+            self.assertTrue(utils.eval(2, "<=", 2))
+            self.assertTrue(utils.eval(-27, "<=", 12))
+            self.assertTrue(utils.eval(-10, "<=", -10))
+            self.assertTrue(utils.eval("h", "<=", "m"))
+            self.assertTrue(utils.eval("p", "<=", "p"))
 
-        self.assertTrue(utils.eval(17, "==", 17))
-        self.assertTrue(utils.eval(-19, "==", -19))
-        self.assertTrue(utils.eval("j", "==", "j"))
+        with self.subTest(i=5):
+            self.assertTrue(utils.eval(17, "==", 17))
+            self.assertTrue(utils.eval(-19, "==", -19))
+            self.assertTrue(utils.eval("j", "==", "j"))
 
-        self.assertTrue(utils.eval(56, "!=", 8))
-        self.assertTrue(utils.eval(-3, "!=", -14))
-        self.assertTrue(utils.eval("g", "!=", "y"))
+        with self.subTest(i=6):
+            self.assertTrue(utils.eval(56, "!=", 8))
+            self.assertTrue(utils.eval(-3, "!=", -14))
+            self.assertTrue(utils.eval("g", "!=", "y"))
 
     def test_load_aliases(self):
         aliases = utils.load_aliases()
